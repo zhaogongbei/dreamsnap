@@ -132,10 +132,9 @@ export const PhotoCapture: React.FC<PhotoCaptureProps> = ({ onComplete }) => {
   };
 
   const videoConstraints = {
-    width: isPortrait ? { ideal: 1080 } : { ideal: 1920 },
-    height: isPortrait ? { ideal: 1920 } : { ideal: 1080 },
+    width: { ideal: 1920 },
+    height: { ideal: 1080 },
     facingMode: facingMode,
-    aspectRatio: isPortrait ? 9 / 16 : 16 / 9,
   };
 
   const renderFileInput = () => (
@@ -267,10 +266,12 @@ export const PhotoCapture: React.FC<PhotoCaptureProps> = ({ onComplete }) => {
             ref={webcamRef}
             audio={false}
             screenshotFormat="image/jpeg"
+            screenshotQuality={0.9}
             videoConstraints={videoConstraints}
             onUserMedia={handleUserMedia}
             onUserMediaError={handleUserMediaError}
             className="absolute inset-0 w-full h-full object-cover"
+            mirrored={facingMode === 'user'}
           />
 
           {countdown !== null && countdown > 0 && (
