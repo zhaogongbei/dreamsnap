@@ -130,11 +130,6 @@ export const PhotoCapture: React.FC<PhotoCaptureProps> = ({ onComplete }) => {
     setFacingMode((prev) => (prev === 'user' ? 'environment' : 'user'));
   };
 
-  const handleUserMediaError = (error: string | DOMException) => {
-    console.error('Camera error:', error);
-    setCameraError(t.cameraError);
-  };
-
   const videoConstraints = {
     width: isPortrait ? { ideal: 1080 } : { ideal: 1920 },
     height: isPortrait ? { ideal: 1920 } : { ideal: 1080 },
