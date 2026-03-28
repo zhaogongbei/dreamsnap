@@ -48,5 +48,8 @@
     "react-router-dom": "^7.11.0",
     "react-webcam": "^7.2.0",
     "zustand": "^5.0.9"
+  },
+  "overrides": {
+    "node-domexception": "1.0.0"
   }
 }
