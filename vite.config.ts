@@ -10,6 +10,26 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
+  build: {
+    chunkSizeWarningLimit: 1000, // Increase chunk size warning limit to 1MB
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'vendor': [
+            'react',
+            'react-dom',
+            'react-router-dom',
+          ],
+          'gemini': [
+            '@google/genai',
+          ],
+          'supabase': [
+            '@supabase/supabase-js',
+          ],
+        },
+      },
+    },
+  },
   server: {
     proxy: {
       '/api/gemini': {
