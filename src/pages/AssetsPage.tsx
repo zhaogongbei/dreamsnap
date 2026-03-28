@@ -48,7 +48,7 @@ export const AssetsPage: React.FC = () => {
 
   const formatDate = (isoString: string) => {
     const date = new Date(isoString);
-    return date.toLocaleString(t.language === 'zh' ? 'zh-CN' : 'en-US', {
+    return date.toLocaleString('en-US', {
       month: 'short',
       day: 'numeric',
       hour: '2-digit',

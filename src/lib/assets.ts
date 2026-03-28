@@ -53,7 +53,7 @@ function saveAssets(assets: AssetRecord[]) {
 /**
  * Compress base64 image to reduce storage size
  */
-function compressBase64(base64: string, quality: number = 0.6): string {
+async function compressBase64(base64: string, quality: number = 0.6): Promise<string> {
   return new Promise<string>((resolve) => {
     const img = new Image();
     img.onload = () => {
