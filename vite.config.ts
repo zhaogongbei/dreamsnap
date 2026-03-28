@@ -10,4 +10,18 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
+  server: {
+    proxy: {
+      '/api/gemini': {
+        target: 'https://undyapi.com',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api\/gemini/, '/v1beta'),
+        secure: true,
+        // Fallback to backup URLs on error
+        onError: (err, req, res) => {
+          console.error('Primary API failed, would try backup URLs in production');
+        },
+      },
+    },
+  },
 })

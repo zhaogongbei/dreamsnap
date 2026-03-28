@@ -4,6 +4,7 @@ import { useAppStore } from '@/stores/appStore';
 import { saveLead, saveGalleryPhoto } from '@/lib/supabase';
 import { sendPhotoToTelegram, createTelegramCaption } from '@/lib/telegram';
 import { Lead } from '@/types';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface SuccessPageProps {
   leadData: Lead;
@@ -20,6 +21,7 @@ export const SuccessPage: React.FC<SuccessPageProps> = ({
   const [imagePublicUrl, setImagePublicUrl] = useState<string | null>(null);
   const [errorLog, setErrorLog] = useState<string[]>([]);
   const hasProcessedRef = useRef(false);
+  const { t } = useLanguage();
 
   useEffect(() => {
     // Prevent double execution in React Strict Mode using ref
@@ -128,8 +130,8 @@ export const SuccessPage: React.FC<SuccessPageProps> = ({
                 </div>
               </div>
             </div>
-            <h2 className="text-xl sm:text-2xl font-bold mb-1.5 sm:mb-2 bg-gradient-to-r from-primary-600 to-pink-600 bg-clip-text text-transparent">Processing Your Photo...</h2>
-            <p className="text-gray-700 text-sm sm:text-base">Please wait while we save and share your photo</p>
+            <h2 className="text-xl sm:text-2xl font-bold mb-1.5 sm:mb-2 bg-gradient-to-r from-primary-600 to-pink-600 bg-clip-text text-transparent">{t.processing}</h2>
+            <p className="text-gray-700 text-sm sm:text-base">{t.pleaseWaitSave}</p>
           </div>
         )}
 
@@ -152,10 +154,10 @@ export const SuccessPage: React.FC<SuccessPageProps> = ({
                 </svg>
               </div>
               <h2 className="text-2xl sm:text-3xl font-bold mb-1 sm:mb-2 bg-gradient-to-r from-primary-600 to-pink-600 bg-clip-text text-transparent">
-                {status === 'success' ? 'All Done! ✨' : 'Oops!'}
+                {status === 'success' ? t.allDone : t.error}
               </h2>
               <p className="text-gray-700 text-sm sm:text-base font-medium">
-                {status === 'success' ? 'Your photo will be sent to you shortly' : 'We encountered some issues'}
+                {status === 'success' ? t.photoSentShortly : 'We encountered some issues'}
               </p>
             </div>
 
@@ -181,7 +183,7 @@ export const SuccessPage: React.FC<SuccessPageProps> = ({
                     <svg className="w-5 h-5 sm:w-6 sm:h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
                     </svg>
-                    Scan to Download
+                    {t.scanToDownload}
                   </h3>
                   <div className="bg-white p-4 sm:p-6 rounded-lg shadow-xl mb-3 sm:mb-4">
                     <QRCodeSVG
@@ -194,7 +196,7 @@ export const SuccessPage: React.FC<SuccessPageProps> = ({
                     />
                   </div>
                   <p className="text-center text-gray-700 text-sm sm:text-base font-medium px-2">
-                    Scan with your phone to download instantly
+                    {t.scanWithPhone}
                   </p>
                 </div>
               </div>
@@ -206,7 +208,7 @@ export const SuccessPage: React.FC<SuccessPageProps> = ({
                 <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                 </svg>
-                Create Another Photo
+                {t.createAnother}
               </button>
             </div>
           </>

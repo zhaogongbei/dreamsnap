@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useAppStore } from '@/stores/appStore';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface PhotoSelectionProps {
   onNext: () => void;
@@ -9,6 +10,7 @@ interface PhotoSelectionProps {
 export const PhotoSelection: React.FC<PhotoSelectionProps> = ({ onNext }) => {
   const { capturedPhotos, selectedPhoto, selectPhoto } = useAppStore();
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const { t } = useLanguage();
 
   const handleSelectPhoto = (photo: string) => {
     selectPhoto(photo);
@@ -30,10 +32,10 @@ export const PhotoSelection: React.FC<PhotoSelectionProps> = ({ onNext }) => {
             </svg>
           </div>
           <h2 className="text-4xl font-bold mb-3 bg-gradient-to-r from-primary-600 to-pink-600 bg-clip-text text-transparent">
-            Select Your Best Photo
+            {t.selectBestPhoto}
           </h2>
           <p className="text-gray-600 text-lg">
-            Choose the photo you like best for your AI transformation
+            {t.chooseBestPhoto}
           </p>
         </div>
 
@@ -118,7 +120,7 @@ export const PhotoSelection: React.FC<PhotoSelectionProps> = ({ onNext }) => {
               <svg className="w-6 h-6 text-primary-600" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
               </svg>
-              Selected Photo Preview
+              {t.selectedPhotoPreview}
             </h3>
             <div className="max-w-md mx-auto rounded-2xl overflow-hidden shadow-2xl ring-4 ring-primary-600 ring-opacity-50">
               <img
@@ -146,7 +148,7 @@ export const PhotoSelection: React.FC<PhotoSelectionProps> = ({ onNext }) => {
                 d="M10 19l-7-7m0 0l7-7m-7 7h18"
               />
             </svg>
-            Retake Photos
+            {t.retakePhotos}
           </button>
 
           <button
@@ -154,7 +156,7 @@ export const PhotoSelection: React.FC<PhotoSelectionProps> = ({ onNext }) => {
             disabled={!selectedPhoto}
             className="btn-primary"
           >
-            Continue to Themes
+            {t.continueToThemes}
             <svg
               className="w-5 h-5 inline-block ml-2"
               fill="none"
@@ -173,7 +175,7 @@ export const PhotoSelection: React.FC<PhotoSelectionProps> = ({ onNext }) => {
 
         {!selectedPhoto && (
           <p className="text-center text-sm text-gray-500 mt-4">
-            Tap on a photo to select it
+            {t.tapPhotoToSelect}
           </p>
         )}
       </div>

@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react';
 import { useAppStore } from '@/stores/appStore';
 import { themes, getThemeCategories } from '@/lib/themes';
 import { Theme } from '@/types';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface ThemeSelectionProps {
   onNext: () => void;
@@ -12,6 +13,7 @@ export const ThemeSelection: React.FC<ThemeSelectionProps> = ({ onNext, onBack }
   const { selectedTheme, selectTheme } = useAppStore();
   const [hoveredTheme, setHoveredTheme] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const { t } = useLanguage();
 
   const categories = useMemo(() => getThemeCategories(), []);
 
@@ -48,10 +50,10 @@ export const ThemeSelection: React.FC<ThemeSelectionProps> = ({ onNext, onBack }
               </svg>
             </div>
             <h2 className="text-4xl font-bold mb-3 bg-gradient-to-r from-primary-600 to-pink-600 bg-clip-text text-transparent">
-              Choose Your Theme
+              {t.chooseTheme}
             </h2>
             <p className="text-gray-600 text-lg">
-              Select a style for your AI-transformed photo
+              {t.selectTheme}
             </p>
           </div>
 
@@ -66,19 +68,19 @@ export const ThemeSelection: React.FC<ThemeSelectionProps> = ({ onNext, onBack }
                     : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
                 }`}
               >
-                All Themes
+                {t.allThemes}
               </button>
               {categories.map((category) => (
                 <button
                   key={category}
                   onClick={() => setSelectedCategory(category)}
-                  className={`px-4 py-2 rounded-full font-medium transition-all capitalize ${
+                  className={`px-4 py-2 rounded-full font-medium transition-all ${
                     selectedCategory === category
                       ? 'bg-primary-600 text-white shadow-lg'
                       : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
                   }`}
                 >
-                  {category}
+                  {t[category as keyof typeof t] || category}
                 </button>
               ))}
             </div>
@@ -117,7 +119,7 @@ export const ThemeSelection: React.FC<ThemeSelectionProps> = ({ onNext, onBack }
                         d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"
                       />
                     </svg>
-                    <p className="text-xl font-bold">Custom Theme</p>
+                    <p className="text-xl font-bold">{t.customTheme}</p>
                   </div>
                 ) : theme.themeImage ? (
                   <img
@@ -147,7 +149,7 @@ export const ThemeSelection: React.FC<ThemeSelectionProps> = ({ onNext, onBack }
               {/* Theme info */}
               <div className="p-4 bg-white">
                 <h3 className="font-semibold text-lg text-gray-800 mb-1">
-                  {theme.name}
+                  {t[theme.name as keyof typeof t] || theme.name}
                 </h3>
                 <p className="text-sm text-gray-600 line-clamp-2">
                   {theme.description}
@@ -158,7 +160,7 @@ export const ThemeSelection: React.FC<ThemeSelectionProps> = ({ onNext, onBack }
               {theme.disabled && (
                 <div className="absolute top-3 left-3 right-3 flex justify-center">
                   <div className="bg-gray-800 bg-opacity-90 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg">
-                    COMING SOON
+                    {t.comingSoon}
                   </div>
                 </div>
               )}
@@ -212,7 +214,7 @@ export const ThemeSelection: React.FC<ThemeSelectionProps> = ({ onNext, onBack }
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
                 <h3 className="text-2xl font-bold text-center text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-pink-600">
-                  {selectedTheme.name}
+                  {t[selectedTheme.name as keyof typeof t] || selectedTheme.name}
                 </h3>
               </div>
               <p className="text-center text-gray-700 max-w-2xl mx-auto text-lg">
@@ -240,7 +242,7 @@ export const ThemeSelection: React.FC<ThemeSelectionProps> = ({ onNext, onBack }
                 d="M10 19l-7-7m0 0l7-7m-7 7h18"
               />
             </svg>
-            Back to Photos
+            {t.backToPhotos}
           </button>
 
           <button
@@ -248,7 +250,7 @@ export const ThemeSelection: React.FC<ThemeSelectionProps> = ({ onNext, onBack }
             disabled={!selectedTheme}
             className="btn-primary flex items-center gap-2 px-8 py-3 text-lg shadow-xl hover:shadow-2xl transition-all"
           >
-            Generate AI Photo
+            {t.generateAIPhoto}
             <svg
               className="w-6 h-6"
               fill="none"
@@ -267,7 +269,7 @@ export const ThemeSelection: React.FC<ThemeSelectionProps> = ({ onNext, onBack }
 
         {!selectedTheme && (
           <p className="text-center text-sm text-gray-600 mt-3 font-medium">
-            ✨ Select a theme to continue
+            {t.selectThemeToContinue}
           </p>
         )}
       </div>

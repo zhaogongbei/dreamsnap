@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useAppStore } from '@/stores/appStore';
 import { Lead } from '@/types';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface LeadCaptureFormProps {
   onSubmit: (lead: Lead) => void;
@@ -8,6 +9,7 @@ interface LeadCaptureFormProps {
 
 export const LeadCaptureForm: React.FC<LeadCaptureFormProps> = ({ onSubmit }) => {
   const { selectedTheme } = useAppStore();
+  const { t } = useLanguage();
 
   const [formData, setFormData] = useState({
     fullName: '',
@@ -45,19 +47,19 @@ export const LeadCaptureForm: React.FC<LeadCaptureFormProps> = ({ onSubmit }) =>
 
     // Validate name
     if (!formData.fullName.trim() || formData.fullName.length < 2) {
-      newErrors.fullName = 'Please enter a valid name (minimum 2 characters)';
+      newErrors.fullName = t.validNameError;
     }
 
     // Validate phone number (basic validation - at least 6 digits, max 15)
     if (!formData.phoneNumber.trim()) {
-      newErrors.phoneNumber = 'Phone number is required';
+      newErrors.phoneNumber = t.phoneRequiredError;
     } else if (!/^\d{6,15}$/.test(formData.phoneNumber.replace(/[\s-]/g, ''))) {
-      newErrors.phoneNumber = 'Please enter a valid phone number (6-15 digits)';
+      newErrors.phoneNumber = t.validPhoneError;
     }
 
     // Validate consent
     if (!formData.consentGiven) {
-      newErrors.consent = 'You must agree to the terms';
+      newErrors.consent = t.agreeTermsError;
     }
 
     setErrors(newErrors);
@@ -130,10 +132,10 @@ export const LeadCaptureForm: React.FC<LeadCaptureFormProps> = ({ onSubmit }) =>
             </svg>
           </div>
           <h2 className="text-4xl font-bold mb-3 bg-gradient-to-r from-primary-600 to-pink-600 bg-clip-text text-transparent">
-            Almost There!
+            {t.almostDone}
           </h2>
           <p className="text-gray-600 text-lg">
-            Share your details to receive your photo
+            {t.enterDetails}
           </p>
         </div>
 
@@ -141,13 +143,13 @@ export const LeadCaptureForm: React.FC<LeadCaptureFormProps> = ({ onSubmit }) =>
           {/* Full Name */}
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-2">
-              Full Name(s) *
+              {t.fullName} *
             </label>
             <input
               type="text"
               value={formData.fullName}
               onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-              placeholder="e.g., Sarah & James"
+              placeholder={t.fullNamePlaceholder}
               className={`input-field ${errors.fullName ? 'border-red-500' : ''}`}
             />
             {errors.fullName && (
@@ -159,28 +161,27 @@ export const LeadCaptureForm: React.FC<LeadCaptureFormProps> = ({ onSubmit }) =>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Instagram Handle 1
-                <span className="text-gray-500 text-xs ml-1">(Optional)</span>
+                {t.instagramHandle}
               </label>
               <input
                 type="text"
                 value={formData.instagramHandle1}
                 onChange={(e) => handleInstagramInputChange('instagramHandle1', e.target.value)}
-                placeholder="@username"
+                placeholder={t.instagramPlaceholder}
                 className="input-field"
               />
             </div>
 
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Instagram Handle 2
-                <span className="text-gray-500 text-xs ml-1">(Optional)</span>
+                {t.instagramHandle} 2
+                <span className="text-gray-500 text-xs ml-1">({t.cancel})</span>
               </label>
               <input
                 type="text"
                 value={formData.instagramHandle2}
                 onChange={(e) => handleInstagramInputChange('instagramHandle2', e.target.value)}
-                placeholder="@username"
+                placeholder={t.instagramPlaceholder}
                 className="input-field"
               />
             </div>
@@ -189,7 +190,7 @@ export const LeadCaptureForm: React.FC<LeadCaptureFormProps> = ({ onSubmit }) =>
           {/* Phone Number */}
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-2">
-              Phone Number *
+              {t.phoneNumber} *
             </label>
             <div className="flex gap-2">
               <select
@@ -209,7 +210,7 @@ export const LeadCaptureForm: React.FC<LeadCaptureFormProps> = ({ onSubmit }) =>
                 onChange={(e) =>
                   setFormData({ ...formData, phoneNumber: e.target.value.replace(/[^0-9\s-]/g, '') })
                 }
-                placeholder="Enter phone number"
+                placeholder={t.phonePlaceholder}
                 maxLength={15}
                 className={`input-field flex-1 ${errors.phoneNumber ? 'border-red-500' : ''}`}
               />
@@ -229,11 +230,11 @@ export const LeadCaptureForm: React.FC<LeadCaptureFormProps> = ({ onSubmit }) =>
                 className="mt-1 mr-3 w-6 h-6 text-primary-600 border-gray-300 rounded-md focus:ring-primary-500 focus:ring-2"
               />
               <span className="text-sm text-gray-800 font-medium">
-                I allow DreamSnap and the event organizer to use this photo for promotional purposes. *
+                {t.photoUseConsent}
               </span>
             </label>
             {errors.consent && (
-              <p className="text-red-500 text-sm mt-2 ml-9 font-semibold">{errors.consent}</p>
+              <p className="text-red-500 text-sm mt-2 ml-9 font-semibold">{t.agreeTermsError}</p>
             )}
           </div>
 
@@ -247,7 +248,7 @@ export const LeadCaptureForm: React.FC<LeadCaptureFormProps> = ({ onSubmit }) =>
                 className="mt-1 mr-3 w-6 h-6 text-blue-600 border-gray-300 rounded-md focus:ring-blue-500 focus:ring-2"
               />
               <span className="text-sm text-gray-800 font-medium">
-                I would be interested in paying for this as a software product.
+                {t.payForProductInterest}
               </span>
             </label>
           </div>
@@ -257,7 +258,7 @@ export const LeadCaptureForm: React.FC<LeadCaptureFormProps> = ({ onSubmit }) =>
             <svg className="w-5 h-5 inline-block mr-2 text-primary-600" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
             </svg>
-            Your data is used solely for our marketing purposes and will never be transferred or sold to third parties.
+            {t.privacyNote}
           </div>
 
           {/* Submit button */}
@@ -288,7 +289,7 @@ export const LeadCaptureForm: React.FC<LeadCaptureFormProps> = ({ onSubmit }) =>
                     d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                   ></path>
                 </svg>
-                Processing...
+                {t.submitting}
               </>
             ) : (
               <>
@@ -305,7 +306,7 @@ export const LeadCaptureForm: React.FC<LeadCaptureFormProps> = ({ onSubmit }) =>
                     d="M13 10V3L4 14h7v7l9-11h-7z"
                   />
                 </svg>
-                Submit & Download Photo
+                {t.submitDownloadPhoto}
               </>
             )}
           </button>

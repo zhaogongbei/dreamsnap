@@ -1,5 +1,7 @@
 import { useEffect, useState, useCallback, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { fetchGalleryPhotos, subscribeToGalleryPhotos } from '@/lib/supabase';
+import { useLanguage, LanguageSwitcher } from '@/contexts/LanguageContext';
 
 interface GalleryPhoto {
   id: string;
@@ -14,14 +16,15 @@ interface GalleryPageProps {
   onStartNew: () => void;
 }
 
-export const GalleryPage: React.FC<GalleryPageProps> = () => {
+export const GalleryPage: React.FC<GalleryPageProps> = ({ onStartNew }) => {
+  const navigate = useNavigate();
+  const { t } = useLanguage();
   const [photos, setPhotos] = useState<GalleryPhoto[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [newPhotoPopup, setNewPhotoPopup] = useState<GalleryPhoto | null>(null);
   const [shuffleKey, setShuffleKey] = useState(0);
 
-  // Transform photo data helper
   const transformPhoto = useCallback((item: any): GalleryPhoto => ({
     id: item.id,
     url: item.image_url,
@@ -35,30 +38,27 @@ export const GalleryPage: React.FC<GalleryPageProps> = () => {
     loadPhotos();
   }, []);
 
-  // Auto-refresh every 15 minutes
   useEffect(() => {
     const refreshInterval = setInterval(() => {
       console.log('Auto-refreshing gallery...');
       loadPhotos();
-    }, 900000); // 15 minutes (900 seconds)
+    }, 900000);
 
     return () => {
       clearInterval(refreshInterval);
     };
   }, []);
 
-  // Reshuffle photos every 60 seconds (when animation loop completes)
   useEffect(() => {
     const reshuffleInterval = setInterval(() => {
       setShuffleKey(prev => prev + 1);
-    }, 60000); // 60 seconds to match animation duration
+    }, 60000);
 
     return () => {
       clearInterval(reshuffleInterval);
     };
   }, []);
 
-  // Real-time subscription for new photos
   useEffect(() => {
     const eventId = import.meta.env.VITE_EVENT_ID;
     if (!eventId) {
@@ -71,20 +71,16 @@ export const GalleryPage: React.FC<GalleryPageProps> = () => {
       (newPhoto) => {
         const transformedPhoto = transformPhoto(newPhoto);
         setPhotos((prevPhotos) => {
-          // Prevent duplicates
           if (prevPhotos.some(p => p.id === transformedPhoto.id)) {
             return prevPhotos;
           }
 
-          // Show popup for new photo
           setNewPhotoPopup(transformedPhoto);
 
-          // Hide popup and add to gallery after 3 seconds
           setTimeout(() => {
             setNewPhotoPopup(null);
           }, 3000);
 
-          // Prepend new photo (newest first)
           return [transformedPhoto, ...prevPhotos];
         });
       },
@@ -99,8 +95,6 @@ export const GalleryPage: React.FC<GalleryPageProps> = () => {
     };
   }, [transformPhoto]);
 
-  // Shuffle photos randomly - memoized with shuffleKey to trigger reshuffle
-  // MUST be before conditional returns to avoid hook ordering issues
   const allPhotos = useMemo(() => {
     if (photos.length === 0) return [];
 
@@ -113,8 +107,7 @@ export const GalleryPage: React.FC<GalleryPageProps> = () => {
       return shuffled;
     };
 
-    // Ensure we have enough photos to fill the screen by duplicating
-    const minPhotosNeeded = 15; // Enough to fill 1 row
+    const minPhotosNeeded = 15;
     let result = shuffleArray([...photos]);
     while (result.length < minPhotosNeeded) {
       result = [...result, ...shuffleArray([...photos])];
@@ -126,7 +119,6 @@ export const GalleryPage: React.FC<GalleryPageProps> = () => {
     try {
       setLoading(true);
 
-      // Fetch photos from Supabase gallery
       const eventId = import.meta.env.VITE_EVENT_ID;
       const galleryData = await fetchGalleryPhotos(eventId);
 
@@ -136,9 +128,7 @@ export const GalleryPage: React.FC<GalleryPageProps> = () => {
         return;
       }
 
-      // Transform data to GalleryPhoto format using helper
       const transformedPhotos: GalleryPhoto[] = galleryData.map(transformPhoto);
-
       setPhotos(transformedPhotos);
     } catch (err) {
       console.error('Error loading gallery:', err);
@@ -149,22 +139,29 @@ export const GalleryPage: React.FC<GalleryPageProps> = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-black">
-        <div className="inline-block w-16 h-16 border-8 border-gray-700 border-t-white rounded-full animate-spin"></div>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100">
+        <div className="text-center">
+          <div className="inline-block w-16 h-16 border-8 border-gray-300 border-t-primary-600 rounded-full animate-spin mb-4"></div>
+          <p className="text-gray-600">{t.loading}</p>
+        </div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-black">
-        <div className="text-white text-center">
-          <p className="text-xl mb-4">{error}</p>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 p-4">
+        <div className="text-center max-w-md">
+          <svg className="w-16 h-16 text-red-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+          </svg>
+          <p className="text-xl text-gray-800 mb-4">{t.error}</p>
+          <p className="text-gray-600 mb-6">{error}</p>
           <button
             onClick={loadPhotos}
-            className="px-6 py-2 bg-white text-black rounded-lg hover:bg-gray-200 transition-colors"
+            className="px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
           >
-            Retry
+            {t.retry}
           </button>
         </div>
       </div>
@@ -172,7 +169,35 @@ export const GalleryPage: React.FC<GalleryPageProps> = () => {
   }
 
   if (photos.length === 0) {
-    return <div className="min-h-screen bg-black"></div>;
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center p-4">
+        <div className="absolute top-4 left-4 flex gap-2">
+          <LanguageSwitcher />
+          <button
+            onClick={() => navigate('/')}
+            className="px-4 py-2 bg-white bg-opacity-90 backdrop-blur-md text-gray-800 rounded-full shadow-lg hover:bg-opacity-100 transition-all text-sm font-medium"
+          >
+            {t.backToHome}
+          </button>
+        </div>
+
+        <div className="text-center max-w-md">
+          <svg className="w-24 h-24 text-gray-300 mx-auto mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+          </svg>
+          <h2 className="text-2xl font-bold text-gray-800 mb-2">{t.gallery}</h2>
+          <p className="text-gray-600 mb-6">
+            {t.noHistory}
+          </p>
+          <button
+            onClick={() => navigate('/')}
+            className="px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors font-medium"
+          >
+            {t.createFirstPhoto}
+          </button>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -226,10 +251,20 @@ export const GalleryPage: React.FC<GalleryPageProps> = () => {
         }
       `}</style>
 
-      {/* Single Row - Scrolling Left */}
+      {/* Top Navigation */}
+      <div className="absolute top-4 left-4 z-20 flex gap-2">
+        <LanguageSwitcher />
+        <button
+          onClick={() => navigate('/')}
+          className="px-4 py-2 bg-white bg-opacity-90 backdrop-blur-md text-gray-800 rounded-full shadow-lg hover:bg-opacity-100 transition-all text-sm font-medium"
+        >
+          {t.backToHome}
+        </button>
+      </div>
+
+      {/* Scrolling Photos */}
       <div className="overflow-hidden w-full">
         <div key={shuffleKey} className="flex gap-4 scroll-left">
-          {/* Duplicate photos for seamless loop */}
           {[...allPhotos, ...allPhotos].map((photo, index) => (
             <div
               key={`${photo.id}-${index}`}
@@ -246,7 +281,7 @@ export const GalleryPage: React.FC<GalleryPageProps> = () => {
         </div>
       </div>
 
-      {/* New Photo Popup Overlay */}
+      {/* New Photo Popup */}
       {newPhotoPopup && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-80 pointer-events-none">
           <div className="pop-in max-w-md w-full px-4">
