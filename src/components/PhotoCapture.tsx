@@ -47,6 +47,7 @@ export const PhotoCapture: React.FC<PhotoCaptureProps> = ({ onComplete }) => {
   const handleUserMediaError = (error: string | DOMException) => {
     console.error('Camera error:', error);
     setCameraError(t.cameraError);
+    setCameraReady(false);
   };
 
   const handleFileUpload = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
@@ -271,17 +272,6 @@ export const PhotoCapture: React.FC<PhotoCaptureProps> = ({ onComplete }) => {
             onUserMediaError={handleUserMediaError}
             className="absolute inset-0 w-full h-full object-cover"
           />
-
-          {/* Loading overlay when camera is not ready */}
-          {!cameraReady && !cameraError && (
-            <div className="absolute inset-0 flex items-center justify-center bg-black z-30">
-              <div className="text-center text-white">
-                <div className="w-16 h-16 border-4 border-white border-t-primary-500 rounded-full animate-spin mx-auto mb-4"></div>
-                <p className="text-lg">📷 正在启动摄像头...</p>
-                <p className="text-sm text-gray-400 mt-2">请授权摄像头访问权限</p>
-              </div>
-            </div>
-          )}
 
           {countdown !== null && countdown > 0 && (
             <div className="absolute inset-0 flex items-center justify-center z-30 pointer-events-none">
