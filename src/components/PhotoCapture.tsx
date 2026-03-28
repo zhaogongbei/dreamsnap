@@ -17,6 +17,7 @@ export const PhotoCapture: React.FC<PhotoCaptureProps> = ({ onComplete }) => {
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
   const [countdown, setCountdown] = useState<number | null>(null);
   const [facingMode, setFacingMode] = useState<'user' | 'environment'>('user');
+  const [cameraReady, setCameraReady] = useState(false);
   const [cameraError, setCameraError] = useState<string | null>(null);
   const [isPortrait, setIsPortrait] = useState(window.innerHeight > window.innerWidth);
   const [mode, setMode] = useState<'camera' | 'upload'>('camera');
@@ -35,6 +36,18 @@ export const PhotoCapture: React.FC<PhotoCaptureProps> = ({ onComplete }) => {
       window.removeEventListener('orientationchange', handleOrientationChange);
     };
   }, []);
+
+  // Handler for camera ready
+  const handleUserMedia = () => {
+    console.log('Camera is ready');
+    setCameraReady(true);
+  };
+
+  // Handler for camera error  
+  const handleUserMediaError = (error: string | DOMException) => {
+    console.error('Camera error:', error);
+    setCameraError(t.cameraError);
+  };
 
   const handleFileUpload = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
@@ -259,9 +272,21 @@ export const PhotoCapture: React.FC<PhotoCaptureProps> = ({ onComplete }) => {
             audio={false}
             screenshotFormat="image/jpeg"
             videoConstraints={videoConstraints}
+            onUserMedia={handleUserMedia}
             onUserMediaError={handleUserMediaError}
             className="absolute inset-0 w-full h-full object-cover"
           />
+
+          {/* Loading overlay when camera is not ready */}
+          {!cameraReady && !cameraError && (
+            <div className="absolute inset-0 flex items-center justify-center bg-black z-30">
+              <div className="text-center text-white">
+                <div className="w-16 h-16 border-4 border-white border-t-primary-500 rounded-full animate-spin mx-auto mb-4"></div>
+                <p className="text-lg">📷 正在启动摄像头...</p>
+                <p className="text-sm text-gray-400 mt-2">请授权摄像头访问权限</p>
+              </div>
+            </div>
+          )}
 
           {countdown !== null && countdown > 0 && (
             <div className="absolute inset-0 flex items-center justify-center z-30 pointer-events-none">
