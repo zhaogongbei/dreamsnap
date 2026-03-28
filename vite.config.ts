@@ -11,7 +11,7 @@ export default defineConfig({
     },
   },
   build: {
-    chunkSizeWarningLimit: 1000, // Increase chunk size warning limit to 1MB
+    chunkSizeWarningLimit: 1500, // Increase to 1.5MB to suppress warnings
     rollupOptions: {
       output: {
         manualChunks: {
@@ -19,9 +19,6 @@ export default defineConfig({
             'react',
             'react-dom',
             'react-router-dom',
-          ],
-          'gemini': [
-            '@google/genai',
           ],
           'supabase': [
             '@supabase/supabase-js',
@@ -37,10 +34,6 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api\/gemini/, '/v1beta'),
         secure: true,
-        // Fallback to backup URLs on error
-        onError: (err, req, res) => {
-          console.error('Primary API failed, would try backup URLs in production');
-        },
       },
     },
   },
