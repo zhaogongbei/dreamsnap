@@ -71,6 +71,15 @@ export const translations = {
     'Singapore Coffee Shop': 'Singapore Coffee Shop',
     'Ski Resort Winter': 'Ski Resort Winter',
     'Tropical Beach Wedding': 'Tropical Beach Wedding',
+    'Studio Ghibli Style': 'Studio Ghibli Style',
+    'Cyberpunk Style': 'Cyberpunk Style',
+    'Impressionist Style': 'Impressionist Style',
+    'Mecha Style': 'Mecha Style',
+    'Game CG Style': 'Game CG Style',
+    'Chinese Style': 'Chinese Style',
+    'Pixar Style': 'Pixar Style',
+    'Picture Book Story Style': 'Picture Book Story Style',
+    'Retro Comic Style': 'Retro Comic Style',
     'Custom': 'Custom',
 
     // Theme categories
@@ -240,6 +249,15 @@ export const translations = {
     'Singapore Coffee Shop': '新加坡咖啡馆',
     'Ski Resort Winter': '滑雪度假村冬季',
     'Tropical Beach Wedding': '热带海滩婚礼',
+    'Studio Ghibli Style': '宫崎骏风格',
+    'Cyberpunk Style': '赛博朋克风格',
+    'Impressionist Style': '印象派风格',
+    'Mecha Style': '机甲风格',
+    'Game CG Style': '游戏CG风格',
+    'Chinese Style': '国风风格',
+    'Pixar Style': '皮克斯风格',
+    'Picture Book Story Style': '绘本故事风格',
+    'Retro Comic Style': '复古漫画风格',
     'Custom': '自定义',
 
     // Theme categories

@@ -915,6 +915,330 @@ CRITICAL OUTPUT FORMAT:
 - Do NOT create square images - output must be vertical portrait`,
   },
   {
+    id: 'studio-ghibli',
+    category: 'anime',
+    name: 'Studio Ghibli Style',
+    description: 'Magical Studio Ghibli animation style',
+    previewImage: '/themes/studio-ghibli.jpg',
+    referenceImage: '/previewImage/21.Studio Ghibli.jpg',
+    themeImage: '/themeImage/21.Studio Ghibli.jpg',
+    promptTemplate: `Transform this photo into magical Studio Ghibli animation style.
+
+FACE GUIDELINES:
+- Use the person(s) from the captured image as inspiration for the Ghibli character(s)
+- Transform into Studio Ghibli art style with characteristic soft features
+- Maintain general resemblance while applying Ghibli aesthetic
+- FACE LIGHTING SHOULD BE ADJUSTED to match the surrounding environment and scene lighting
+
+REQUIRED CHANGES:
+- ALWAYS transform into Studio Ghibli animation art style - this is MANDATORY
+- Transform clothing into elegant Ghibli-inspired attire
+- Apply Ghibli-style soft shading, watercolor-like colors, and gentle highlights
+- Background MUST feature beautiful natural scenery typical of Ghibli films
+- Ghibli aesthetic with characteristic soft, dreamy quality
+
+STYLE TO APPLY:
+- Beautiful Studio Ghibli animation art style
+- Soft, watercolor-like color palette
+- Dreamy, magical atmosphere
+- Natural scenery - forests, fields, gardens, or magical landscapes
+- Gentle, whimsical aesthetic
+- Stylized Ghibli interpretation of the person
+
+CRITICAL OUTPUT FORMAT:
+- IGNORE the reference image's aspect ratio completely
+- OUTPUT MUST BE: Portrait orientation 1080x1920 pixels (vertical/tall format)
+- Do NOT create square images - output must be vertical portrait`,
+  },
+  {
+    id: 'cyberpunk-style',
+    category: 'anime',
+    name: 'Cyberpunk Style',
+    description: 'Futuristic cyberpunk with neon colors',
+    previewImage: '/themes/cyberpunk.jpg',
+    referenceImage: '/previewImage/22.Cyberpunk.jpg',
+    themeImage: '/themeImage/22.Cyberpunk.jpg',
+    promptTemplate: `Transform this photo into futuristic cyberpunk style.
+
+FACE GUIDELINES:
+- Use the person(s) from the captured image as inspiration for the cyberpunk character(s)
+- Transform into cyberpunk art style with futuristic features
+- Maintain general resemblance while applying cyberpunk aesthetic
+- FACE LIGHTING SHOULD BE ADJUSTED to match the surrounding environment and scene lighting
+
+REQUIRED CHANGES:
+- ALWAYS transform into cyberpunk art style - this is MANDATORY
+- Transform clothing into futuristic cyberpunk attire with tech elements
+- Apply neon colors, glowing effects, and cyberpunk shading
+- Background MUST feature futuristic cyberpunk cityscape with neon lights
+- Cyberpunk aesthetic with characteristic neon glow and tech elements
+
+STYLE TO APPLY:
+- Futuristic cyberpunk atmosphere
+- Neon colors - purples, pinks, blues, cyans with glowing effects
+- Futuristic cityscape with holographic elements
+- Tech-inspired design with cybernetic elements
+- Dark, moody cyberpunk aesthetic
+- Stylized cyberpunk interpretation of the person
+
+CRITICAL OUTPUT FORMAT:
+- IGNORE the reference image's aspect ratio completely
+- OUTPUT MUST BE: Portrait orientation 1080x1920 pixels (vertical/tall format)
+- Do NOT create square images - output must be vertical portrait`,
+  },
+  {
+    id: 'impressionist-style',
+    category: 'anime',
+    name: 'Impressionist Style',
+    description: 'Artistic impressionist painting style',
+    previewImage: '/themes/impressionist.jpg',
+    referenceImage: '/previewImage/23.Impressionist.jpg',
+    themeImage: '/themeImage/23.Impressionist.jpg',
+    promptTemplate: `Transform this photo into artistic impressionist painting style.
+
+FACE GUIDELINES:
+- Use the person(s) from the captured image as inspiration for the impressionist artwork
+- Transform into impressionist art style with loose brushstrokes
+- Maintain general resemblance while applying impressionist aesthetic
+- FACE LIGHTING SHOULD BE ADJUSTED to match the surrounding environment and scene lighting
+
+REQUIRED CHANGES:
+- ALWAYS transform into impressionist painting art style - this is MANDATORY
+- Transform clothing into elegant attire suitable for impressionist painting
+- Apply impressionist brushstrokes, soft color blending, and light effects
+- Background MUST feature beautiful impressionist landscape or garden
+- Impressionist aesthetic with characteristic loose brushwork and light play
+
+STYLE TO APPLY:
+- Beautiful impressionist painting style
+- Soft, blended colors with visible brushstrokes
+- Impressionist landscape - gardens, water, nature scenes
+- Emphasis on light and color over detail
+- Romantic, artistic aesthetic
+- Stylized impressionist interpretation of the person
+
+CRITICAL OUTPUT FORMAT:
+- IGNORE the reference image's aspect ratio completely
+- OUTPUT MUST BE: Portrait orientation 1080x1920 pixels (vertical/tall format)
+- Do NOT create square images - output must be vertical portrait`,
+  },
+  {
+    id: 'mecha-style',
+    category: 'anime',
+    name: 'Mecha Style',
+    description: 'Mechanical mecha robot style',
+    previewImage: '/themes/mecha.jpg',
+    referenceImage: '/previewImage/24.Mecha.jpg',
+    themeImage: '/themeImage/24.Mecha.jpg',
+    promptTemplate: `Transform this photo into mechanical mecha robot style.
+
+FACE GUIDELINES:
+- Use the person(s) from the captured image as inspiration for the mecha character(s)
+- Transform into mecha/mechanical art style with robotic features
+- Maintain general resemblance while applying mecha aesthetic
+- FACE LIGHTING SHOULD BE ADJUSTED to match the surrounding environment and scene lighting
+
+REQUIRED CHANGES:
+- ALWAYS transform into mecha/mechanical art style - this is MANDATORY
+- Transform clothing into futuristic mecha suit or mechanical armor
+- Apply metallic shading, mechanical details, and tech elements
+- Background MUST feature futuristic mecha hangar or battle scene
+- Mecha aesthetic with characteristic mechanical and robotic design
+
+STYLE TO APPLY:
+- Futuristic mecha robot atmosphere
+- Metallic colors with mechanical details
+- Futuristic mecha suit with armor plating
+- Mechanical joints, tech elements, and robotic features
+- Dynamic action-ready mecha pose
+- Stylized mecha interpretation of the person
+
+CRITICAL OUTPUT FORMAT:
+- IGNORE the reference image's aspect ratio completely
+- OUTPUT MUST BE: Portrait orientation 1080x1920 pixels (vertical/tall format)
+- Do NOT create square images - output must be vertical portrait`,
+  },
+  {
+    id: 'game-cg-style',
+    category: 'anime',
+    name: 'Game CG Style',
+    description: 'High-quality game CG rendering style',
+    previewImage: '/themes/game-cg.jpg',
+    referenceImage: '/previewImage/25.Game CG.jpg',
+    themeImage: '/themeImage/25.Game CG.jpg',
+    promptTemplate: `Transform this photo into high-quality game CG rendering style.
+
+FACE GUIDELINES:
+- Use the person(s) from the captured image as inspiration for the game character(s)
+- Transform into game CG art style with high-quality rendering
+- Maintain general resemblance while applying game CG aesthetic
+- FACE LIGHTING SHOULD BE ADJUSTED to match the surrounding environment and scene lighting
+
+REQUIRED CHANGES:
+- ALWAYS transform into game CG rendering art style - this is MANDATORY
+- Transform clothing into fantasy or game-inspired elegant attire
+- Apply high-quality rendering, detailed shading, and cinematic lighting
+- Background MUST feature fantasy game environment or epic setting
+- Game CG aesthetic with characteristic high-quality 3D rendering style
+
+STYLE TO APPLY:
+- High-quality game CG rendering style
+- Detailed, polished appearance with cinematic lighting
+- Fantasy game environment or epic fantasy setting
+- Rich colors and detailed textures
+- Professional game character aesthetic
+- Stylized game CG interpretation of the person
+
+CRITICAL OUTPUT FORMAT:
+- IGNORE the reference image's aspect ratio completely
+- OUTPUT MUST BE: Portrait orientation 1080x1920 pixels (vertical/tall format)
+- Do NOT create square images - output must be vertical portrait`,
+  },
+  {
+    id: 'chinese-style',
+    category: 'anime',
+    name: 'Chinese Style',
+    description: 'Traditional Chinese ink painting style',
+    previewImage: '/themes/chinese-style.jpg',
+    referenceImage: '/previewImage/26.Chinese Style.jpg',
+    themeImage: '/themeImage/26.Chinese Style.jpg',
+    promptTemplate: `Transform this photo into traditional Chinese ink painting style.
+
+FACE GUIDELINES:
+- Use the person(s) from the captured image as inspiration for the Chinese art character(s)
+- Transform into traditional Chinese ink painting style
+- Maintain general resemblance while applying Chinese aesthetic
+- FACE LIGHTING SHOULD BE ADJUSTED to match the surrounding environment and scene lighting
+
+REQUIRED CHANGES:
+- ALWAYS transform into traditional Chinese ink painting art style - this is MANDATORY
+- Transform clothing into elegant traditional Chinese attire
+- Apply Chinese brush painting techniques, ink wash effects, and calligraphic style
+- Background MUST feature traditional Chinese landscape or garden
+- Chinese aesthetic with characteristic ink painting and brush work
+
+STYLE TO APPLY:
+- Traditional Chinese ink painting style
+- Monochromatic or subtle color palette with ink wash effects
+- Traditional Chinese landscape - mountains, water, bamboo, plum blossoms
+- Calligraphic brushwork and artistic composition
+- Elegant, refined Chinese aesthetic
+- Stylized Chinese ink painting interpretation of the person
+
+CRITICAL OUTPUT FORMAT:
+- IGNORE the reference image's aspect ratio completely
+- OUTPUT MUST BE: Portrait orientation 1080x1920 pixels (vertical/tall format)
+- Do NOT create square images - output must be vertical portrait`,
+  },
+  {
+    id: 'pixar-style',
+    category: 'anime',
+    name: 'Pixar Style',
+    description: 'Pixar 3D animation style',
+    previewImage: '/themes/pixar.jpg',
+    referenceImage: '/previewImage/27.Pixar.jpg',
+    themeImage: '/themeImage/27.Pixar.jpg',
+    promptTemplate: `Transform this photo into Pixar 3D animation style.
+
+FACE GUIDELINES:
+- Use the person(s) from the captured image as inspiration for the Pixar character(s)
+- Transform into Pixar 3D animation style with characteristic features
+- Maintain general resemblance while applying Pixar aesthetic
+- FACE LIGHTING SHOULD BE ADJUSTED to match the surrounding environment and scene lighting
+
+REQUIRED CHANGES:
+- ALWAYS transform into Pixar 3D animation art style - this is MANDATORY
+- Transform clothing into colorful Pixar-style attire
+- Apply Pixar-style 3D rendering, warm lighting, and expressive features
+- Background MUST feature Pixar-style environment or setting
+- Pixar aesthetic with characteristic 3D animation and warm, inviting style
+
+STYLE TO APPLY:
+- Pixar 3D animation style
+- Warm, inviting lighting and colors
+- Expressive, friendly character design
+- Pixar-style environment or whimsical setting
+- Cheerful, family-friendly aesthetic
+- Stylized Pixar interpretation of the person
+
+CRITICAL OUTPUT FORMAT:
+- IGNORE the reference image's aspect ratio completely
+- OUTPUT MUST BE: Portrait orientation 1080x1920 pixels (vertical/tall format)
+- Do NOT create square images - output must be vertical portrait`,
+  },
+  {
+    id: 'picture-book-story',
+    category: 'anime',
+    name: 'Picture Book Story Style',
+    description: 'Charming picture book illustration style',
+    previewImage: '/themes/picture-book.jpg',
+    referenceImage: '/previewImage/28.Picture Book.jpg',
+    themeImage: '/themeImage/28.Picture Book.jpg',
+    promptTemplate: `Transform this photo into charming picture book illustration style.
+
+FACE GUIDELINES:
+- Use the person(s) from the captured image as inspiration for the picture book character(s)
+- Transform into picture book illustration style with charming features
+- Maintain general resemblance while applying picture book aesthetic
+- FACE LIGHTING SHOULD BE ADJUSTED to match the surrounding environment and scene lighting
+
+REQUIRED CHANGES:
+- ALWAYS transform into picture book illustration art style - this is MANDATORY
+- Transform clothing into charming picture book-style attire
+- Apply picture book illustration techniques, soft colors, and whimsical details
+- Background MUST feature storybook-like environment or magical setting
+- Picture book aesthetic with characteristic illustration and storytelling quality
+
+STYLE TO APPLY:
+- Charming picture book illustration style
+- Soft, warm colors with gentle details
+- Whimsical, magical storybook environment
+- Illustration techniques with artistic composition
+- Warm, inviting, family-friendly aesthetic
+- Stylized picture book interpretation of the person
+
+CRITICAL OUTPUT FORMAT:
+- IGNORE the reference image's aspect ratio completely
+- OUTPUT MUST BE: Portrait orientation 1080x1920 pixels (vertical/tall format)
+- Do NOT create square images - output must be vertical portrait`,
+  },
+  {
+    id: 'retro-comic-style',
+    category: 'anime',
+    name: 'Retro Comic Style',
+    description: 'Vintage retro comic book style',
+    previewImage: '/themes/retro-comic.jpg',
+    referenceImage: '/previewImage/29.Retro Comic.jpg',
+    themeImage: '/themeImage/29.Retro Comic.jpg',
+    promptTemplate: `Transform this photo into vintage retro comic book style.
+
+FACE GUIDELINES:
+- Use the person(s) from the captured image as inspiration for the comic character(s)
+- Transform into retro comic book art style with vintage features
+- Maintain general resemblance while applying comic aesthetic
+- FACE LIGHTING SHOULD BE ADJUSTED to match the surrounding environment and scene lighting
+
+REQUIRED CHANGES:
+- ALWAYS transform into retro comic book art style - this is MANDATORY
+- Transform clothing into vintage comic book-style attire
+- Apply comic book techniques, bold outlines, halftone dots, and vintage colors
+- Background MUST feature retro comic book setting or scene
+- Retro comic aesthetic with characteristic comic book art style
+
+STYLE TO APPLY:
+- Vintage retro comic book style
+- Bold outlines and halftone dot patterns
+- Vintage color palette with classic comic book colors
+- Dynamic comic book composition
+- Retro 1960s-1980s comic aesthetic
+- Stylized retro comic interpretation of the person
+
+CRITICAL OUTPUT FORMAT:
+- IGNORE the reference image's aspect ratio completely
+- OUTPUT MUST BE: Portrait orientation 1080x1920 pixels (vertical/tall format)
+- Do NOT create square images - output must be vertical portrait`,
+  },
+  {
     id: 'custom-coming-soon',
     name: 'Custom',
     description: 'Coming Soon - Design your own custom theme',
