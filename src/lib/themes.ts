@@ -1100,8 +1100,8 @@ CRITICAL OUTPUT FORMAT:
     name: 'Chinese Style',
     description: 'Traditional Chinese ink painting style',
     previewImage: '/themes/chinese-style.jpg',
-    referenceImage: '/previewImage/26.Chinese Style.jpg',
-    themeImage: '/themeImage/26.Chinese Style.jpg',
+    referenceImage: '/previewImage/26.Chinese.jpg',
+    themeImage: '/themeImage/26.Chinese.jpg',
     promptTemplate: `Transform this photo into traditional Chinese ink painting style.
 
 FACE GUIDELINES:
@@ -1172,8 +1172,8 @@ CRITICAL OUTPUT FORMAT:
     name: 'Picture Book Story Style',
     description: 'Charming picture book illustration style',
     previewImage: '/themes/picture-book.jpg',
-    referenceImage: '/previewImage/28.Picture Book.jpg',
-    themeImage: '/themeImage/28.Picture Book.jpg',
+    referenceImage: '/previewImage/28.Picture book story.jpg',
+    themeImage: '/themeImage/28.Picture book story.jpg',
     promptTemplate: `Transform this photo into charming picture book illustration style.
 
 FACE GUIDELINES:
@@ -1208,8 +1208,8 @@ CRITICAL OUTPUT FORMAT:
     name: 'Retro Comic Style',
     description: 'Vintage retro comic book style',
     previewImage: '/themes/retro-comic.jpg',
-    referenceImage: '/previewImage/29.Retro Comic.jpg',
-    themeImage: '/themeImage/29.Retro Comic.jpg',
+    referenceImage: '/previewImage/29.Retro comic.jpg',
+    themeImage: '/themeImage/29.Retro comic.jpg',
     promptTemplate: `Transform this photo into vintage retro comic book style.
 
 FACE GUIDELINES:
