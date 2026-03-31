@@ -5,6 +5,7 @@ import { AuthProvider } from '@/contexts/AuthContext';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { LanguageProvider, LanguageSwitcher, useLanguage } from '@/contexts/LanguageContext';
 import { sendPhotoToFeishu, sendTextToFeishu, createFeishuMessage } from '@/lib/feishu';
+import { WeChatGuide } from '@/components/WeChatGuide';
 
 // Components
 import { PhotoCapture } from '@/components/PhotoCapture';
@@ -230,6 +231,7 @@ function App() {
     <BrowserRouter>
       <AuthProvider>
         <LanguageProvider>
+          <WeChatGuide />
           <AppContent />
         </LanguageProvider>
       </AuthProvider>
