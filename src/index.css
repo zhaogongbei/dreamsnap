@@ -1,55 +1,120 @@
 @import "tailwindcss";
 
 @theme {
-  --color-primary-50: #fdf4ff;
-  --color-primary-100: #fae8ff;
-  --color-primary-200: #f5d0fe;
-  --color-primary-300: #f0abfc;
-  --color-primary-400: #e879f9;
-  --color-primary-500: #d946ef;
-  --color-primary-600: #c026d3;
-  --color-primary-700: #a21caf;
-  --color-primary-800: #86198f;
-  --color-primary-900: #701a75;
+  --color-primary-50: #EDEAFF;
+  --color-primary-100: #D9CCFF;
+  --color-primary-200: #B89AFF;
+  --color-primary-300: #9B6FFF;
+  --color-primary-400: #7C3AED;
+  --color-primary-500: #6C5CE7;
+  --color-primary-600: #5A4BD1;
+  --color-primary-700: #4A3BB5;
+  --color-primary-800: #3B2D9E;
+  --color-primary-900: #2D1F87;
 
-  /* Serif font family */
-  --font-family-base: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --color-accent-400: #FF8FB8;
+  --color-accent-500: #FF6B9D;
+  --color-accent-600: #E8548A;
+
+  --color-surface: #0A0A14;
+  --color-surface-light: #13132A;
+  --color-surface-card: rgba(255, 255, 255, 0.06);
+  --color-surface-card-hover: rgba(255, 255, 255, 0.1);
+  --color-surface-glass: rgba(255, 255, 255, 0.08);
+  --color-text-primary: #FFFFFF;
+  --color-text-secondary: rgba(255, 255, 255, 0.6);
+  --color-text-muted: rgba(255, 255, 255, 0.35);
+  --color-border-subtle: rgba(255, 255, 255, 0.08);
+  --color-border-light: rgba(255, 255, 255, 0.12);
 }
 
 @layer base {
   * {
-    font-family: var(--font-family-base);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans SC', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   body {
-    @apply bg-gradient-to-br from-purple-50 to-pink-50 min-h-screen;
-    font-family: var(--font-family-base);
+    @apply bg-surface text-text-primary;
+    overscroll-behavior: none;
   }
 
-  h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-family-base);
-    font-weight: 700;
+  ::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
   }
 
-  button, input, select, textarea {
-    font-family: var(--font-family-base);
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 10px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.25);
   }
 }
 
 @layer components {
+  /* Primary button */
   .btn-primary {
-    @apply bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3 px-8 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100;
+    @apply bg-primary-500 hover:bg-primary-600 active:bg-primary-700 text-white font-semibold py-3.5 px-8 rounded-2xl shadow-lg shadow-primary-500/20 transition-all duration-300 hover:shadow-xl hover:shadow-primary-500/30 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:shadow-lg;
   }
 
+  /* Secondary button */
   .btn-secondary {
-    @apply bg-white text-primary-700 font-semibold py-3 px-8 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 border-2 border-primary-200 hover:border-primary-400;
+    @apply bg-surface-card hover:bg-surface-card-hover text-text-primary font-semibold py-3.5 px-8 rounded-2xl border border-border-subtle hover:border-border-light transition-all duration-300 backdrop-blur-md;
   }
 
+  /* Glass card */
   .card {
-    @apply bg-white rounded-2xl shadow-xl p-6;
+    @apply bg-surface-card backdrop-blur-xl rounded-3xl border border-border-subtle;
   }
 
+  /* Input field */
   .input-field {
-    @apply w-full px-4 py-3 rounded-lg border-2 border-gray-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 transition-all outline-none;
+    @apply w-full px-4 py-3.5 rounded-2xl bg-surface-card border border-border-subtle focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 transition-all outline-none text-text-primary placeholder-text-muted;
+  }
+
+  /* Shutter button */
+  .shutter-btn {
+    @apply w-20 h-20 rounded-full border-[5px] border-white/30 flex items-center justify-center transition-all duration-200 active:scale-95;
+  }
+  .shutter-btn-inner {
+    @apply w-14 h-14 rounded-full bg-white transition-all duration-200;
+  }
+  .shutter-btn:active .shutter-btn-inner {
+    @apply scale-90;
+  }
+
+  /* Control button (camera page) */
+  .camera-ctrl-btn {
+    @apply w-12 h-12 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white transition-all duration-200 active:scale-90 hover:bg-white/20;
+  }
+
+  /* Category pill */
+  .category-pill {
+    @apply px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 whitespace-nowrap;
+  }
+  .category-pill-active {
+    @apply bg-primary-500 text-white shadow-lg shadow-primary-500/25;
+  }
+  .category-pill-inactive {
+    @apply bg-surface-card text-text-secondary border border-border-subtle hover:bg-surface-card-hover hover:text-text-primary;
+  }
+
+  /* Theme card */
+  .theme-card {
+    @apply relative rounded-2xl overflow-hidden border border-border-subtle transition-all duration-300;
+  }
+  .theme-card:hover {
+    @apply border-border-light scale-[1.03] shadow-xl;
+  }
+  .theme-card-selected {
+    @apply border-primary-500 scale-[1.03] shadow-xl shadow-primary-500/20;
   }
 }

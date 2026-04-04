@@ -4,10 +4,10 @@ export interface Theme {
   description: string;
   previewImage: string;
   promptTemplate: string;
-  referenceImage?: string; // Optional reference image for style guidance
-  themeImage?: string; // Image for theme selection display
-  category?: string; // Theme category for filtering
-  disabled?: boolean; // Whether theme is selectable
+  referenceImage?: string;
+  themeImage?: string;
+  category?: string;
+  disabled?: boolean;
 }
 
 export interface Lead {
@@ -31,4 +31,12 @@ export interface CaptureState {
   generatedImage: string | null;
   finalImage: string | null;
   leadData: Partial<Lead> | null;
+}
+
+// Global window extensions
+declare global {
+  interface Window {
+    __dreamsnap_cameraReady?: () => void;
+    __dreamsnap_cameraError?: () => void;
+  }
 }
