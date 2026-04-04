@@ -11,136 +11,266 @@ interface ThemeSelectionProps {
 
 export const ThemeSelection: React.FC<ThemeSelectionProps> = ({ onNext, onBack }) => {
   const { selectedTheme, selectTheme } = useAppStore();
+  const [hoveredTheme, setHoveredTheme] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const { t } = useLanguage();
 
   const categories = useMemo(() => getThemeCategories(), []);
 
   const filteredThemes = useMemo(() => {
-    if (selectedCategory === 'all') return themes;
+    if (selectedCategory === 'all') {
+      return themes;
+    }
     return themes.filter(theme => theme.category === selectedCategory);
   }, [selectedCategory]);
 
-  const handleSelect = (theme: Theme) => {
-    if (theme.disabled) return;
+  const handleSelectTheme = (theme: Theme) => {
+    // Don't allow selection of disabled themes
+    if (theme.disabled) {
+      return;
+    }
     selectTheme(theme);
   };
 
-  return (
-    <div className="min-h-screen bg-surface flex flex-col">
-      {/* Header - sticky */}
-      <div className="sticky top-0 z-40 bg-surface/90 backdrop-blur-xl border-b border-border-subtle">
-        <div className="px-5 pt-6 pb-4">
-          <h1 className="text-2xl font-bold text-white">{t.chooseTheme}</h1>
-          <p className="text-text-secondary text-sm mt-1">{t.selectTheme}</p>
-        </div>
+  const handleContinue = () => {
+    if (selectedTheme) {
+      onNext();
+    }
+  };
 
-        {/* Category pills - horizontal scroll */}
-        <div className="flex gap-2 px-5 pb-4 overflow-x-auto" style={{ scrollbarWidth: 'none' }}>
-          <button
-            onClick={() => setSelectedCategory('all')}
-            className={`category-pill ${selectedCategory === 'all' ? 'category-pill-active' : 'category-pill-inactive'}`}
-          >
-            {t.allThemes}
-          </button>
-          {categories.map((category) => (
-            <button
-              key={category}
-              onClick={() => setSelectedCategory(category)}
-              className={`category-pill ${selectedCategory === category ? 'category-pill-active' : 'category-pill-inactive'}`}
+  return (
+    <div className="flex flex-col min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+      {/* Scrollable content area */}
+      <div className="flex-1 overflow-y-auto p-4 py-12 pb-32">
+        <div className="card max-w-7xl w-full mx-auto shadow-2xl">
+          <div className="text-center mb-8">
+            <div className="inline-block bg-gradient-to-r from-primary-600 to-pink-600 p-4 rounded-2xl mb-4">
+              <svg className="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
+              </svg>
+            </div>
+            <h2 className="text-4xl font-bold mb-3 bg-gradient-to-r from-primary-600 to-pink-600 bg-clip-text text-transparent">
+              {t.chooseTheme}
+            </h2>
+            <p className="text-gray-600 text-lg">
+              {t.selectTheme}
+            </p>
+          </div>
+
+          {/* Category Filter */}
+          {categories.length > 0 && (
+            <div className="mb-6 flex flex-wrap gap-2 justify-center">
+              <button
+                onClick={() => setSelectedCategory('all')}
+                className={`px-4 py-2 rounded-full font-medium transition-all ${
+                  selectedCategory === 'all'
+                    ? 'bg-primary-600 text-white shadow-lg'
+                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                }`}
+              >
+                {t.allThemes}
+              </button>
+              {categories.map((category) => (
+                <button
+                  key={category}
+                  onClick={() => setSelectedCategory(category)}
+                  className={`px-4 py-2 rounded-full font-medium transition-all ${
+                    selectedCategory === category
+                      ? 'bg-primary-600 text-white shadow-lg'
+                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                  }`}
+                >
+                  {t[category as keyof typeof t] || category}
+                </button>
+              ))}
+            </div>
+          )}
+
+          {/* Theme grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
+          {filteredThemes.map((theme) => (
+            <div
+              key={theme.id}
+              className={`relative rounded-xl overflow-hidden transition-all duration-300 ${
+                theme.disabled
+                  ? 'opacity-60 cursor-not-allowed'
+                  : selectedTheme?.id === theme.id
+                  ? 'ring-4 ring-primary-600 scale-105 shadow-2xl cursor-pointer'
+                  : 'hover:scale-105 shadow-lg hover:shadow-xl cursor-pointer'
+              }`}
+              onClick={() => handleSelectTheme(theme)}
+              onMouseEnter={() => !theme.disabled && setHoveredTheme(theme.id)}
+              onMouseLeave={() => setHoveredTheme(null)}
             >
-              {t[category as keyof typeof t] || category}
-            </button>
+              {/* Theme preview image */}
+              <div className="w-full aspect-square bg-gray-200">
+                {theme.disabled && theme.id === 'custom-coming-soon' ? (
+                  <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-primary-400 to-pink-500 text-white">
+                    <svg
+                      className="w-24 h-24 mb-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={1.5}
+                        d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"
+                      />
+                    </svg>
+                    <p className="text-xl font-bold">{t.customTheme}</p>
+                  </div>
+                ) : theme.themeImage ? (
+                  <img
+                    src={theme.themeImage}
+                    alt={theme.name}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-400 to-gray-600 text-white">
+                    <svg
+                      className="w-20 h-20 opacity-50"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={1.5}
+                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                      />
+                    </svg>
+                  </div>
+                )}
+              </div>
+
+              {/* Theme info */}
+              <div className="p-4 bg-white">
+                <h3 className="font-semibold text-lg text-gray-800 mb-1">
+                  {t[theme.name as keyof typeof t] || theme.name}
+                </h3>
+                <p className="text-sm text-gray-600 line-clamp-2">
+                  {theme.description}
+                </p>
+              </div>
+
+              {/* Coming Soon badge for disabled themes */}
+              {theme.disabled && (
+                <div className="absolute top-3 left-3 right-3 flex justify-center">
+                  <div className="bg-gray-800 bg-opacity-90 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg">
+                    {t.comingSoon}
+                  </div>
+                </div>
+              )}
+
+              {/* Selection indicator */}
+              {selectedTheme?.id === theme.id && !theme.disabled && (
+                <div className="absolute top-3 right-3 bg-primary-600 rounded-full p-2 shadow-lg">
+                  <svg
+                    className="w-6 h-6 text-white"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </div>
+              )}
+
+              {/* Hover overlay */}
+              {hoveredTheme === theme.id && selectedTheme?.id !== theme.id && (
+                <div className="absolute inset-0 bg-black bg-opacity-10 flex items-center justify-center">
+                  <div className="bg-white rounded-full p-3 shadow-lg">
+                    <svg
+                      className="w-8 h-8 text-primary-600"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                      />
+                    </svg>
+                  </div>
+                </div>
+              )}
+            </div>
           ))}
         </div>
-      </div>
 
-      {/* Theme grid - scrollable */}
-      <div className="flex-1 overflow-y-auto px-4 py-4 pb-36">
-        <div className="grid grid-cols-2 gap-3 max-w-lg mx-auto">
-          {filteredThemes.map((theme) => {
-            const isSelected = selectedTheme?.id === theme.id;
-            const isDisabled = theme.disabled;
-
-            return (
-              <div
-                key={theme.id}
-                onClick={() => handleSelect(theme)}
-                className={`theme-card ${isSelected ? 'theme-card-selected' : ''} ${isDisabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
-              >
-                {/* Image */}
-                <div className="aspect-[3/4] bg-surface-light relative">
-                  {theme.disabled && theme.id === 'custom-coming-soon' ? (
-                    <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-primary-400/20 to-accent-500/20">
-                      <svg className="w-10 h-10 text-text-muted mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
-                      </svg>
-                      <span className="text-text-muted text-xs font-medium">{t.customTheme}</span>
-                    </div>
-                  ) : theme.themeImage ? (
-                    <img src={theme.themeImage} alt={theme.name} className="w-full h-full object-cover" loading="lazy" />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center">
-                      <svg className="w-8 h-8 text-text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                      </svg>
-                    </div>
-                  )}
-
-                  {/* Coming soon badge */}
-                  {isDisabled && (
-                    <div className="absolute top-2 left-2 bg-black/60 backdrop-blur-md text-white/80 text-[10px] font-medium px-2 py-1 rounded-lg">
-                      {t.comingSoon}
-                    </div>
-                  )}
-
-                  {/* Selection check */}
-                  {isSelected && !isDisabled && (
-                    <div className="absolute top-2 right-2 w-7 h-7 rounded-full bg-primary-500 flex items-center justify-center shadow-lg">
-                      <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                      </svg>
-                    </div>
-                  )}
-                </div>
-
-                {/* Label */}
-                <div className="p-3">
-                  <h3 className="text-sm font-semibold text-white truncate">
-                    {t[theme.name as keyof typeof t] || theme.name}
-                  </h3>
-                  <p className="text-[11px] text-text-muted mt-0.5 line-clamp-1">
-                    {theme.description}
-                  </p>
-                </div>
+          {/* Selected theme preview */}
+          {selectedTheme && (
+            <div className="mb-8 p-6 bg-gradient-to-r from-primary-50 to-pink-50 rounded-2xl shadow-lg border-2 border-primary-200">
+              <div className="flex items-center justify-center gap-2 mb-3">
+                <svg className="w-6 h-6 text-primary-600" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+                <h3 className="text-2xl font-bold text-center text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-pink-600">
+                  {t[selectedTheme.name as keyof typeof t] || selectedTheme.name}
+                </h3>
               </div>
-            );
-          })}
+              <p className="text-center text-gray-700 max-w-2xl mx-auto text-lg">
+                {selectedTheme.description}
+              </p>
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Bottom action bar - sticky */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 bg-surface/90 backdrop-blur-xl border-t border-border-subtle">
-        <div className="max-w-lg mx-auto px-5 py-4 flex gap-3">
-          <button onClick={onBack} className="btn-secondary flex-1 flex items-center justify-center gap-2 text-sm">
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+      {/* Fixed bottom buttons */}
+      <div className="fixed bottom-0 left-0 right-0 bg-white bg-opacity-95 backdrop-blur-lg border-t-2 border-gray-200 shadow-2xl p-4 z-50">
+        <div className="max-w-7xl mx-auto flex gap-4 justify-center">
+          <button onClick={onBack} className="btn-secondary flex items-center gap-2 px-6 py-3 text-lg shadow-lg hover:shadow-xl transition-all">
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2.5}
+                d="M10 19l-7-7m0 0l7-7m-7 7h18"
+              />
             </svg>
             {t.backToPhotos}
           </button>
+
           <button
-            onClick={onNext}
+            onClick={handleContinue}
             disabled={!selectedTheme}
-            className="btn-primary flex-[1.5] flex items-center justify-center gap-2 text-sm"
+            className="btn-primary flex items-center gap-2 px-8 py-3 text-lg shadow-xl hover:shadow-2xl transition-all"
           >
             {t.generateAIPhoto}
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2.5}
+                d="M13 10V3L4 14h7v7l9-11h-7z"
+              />
             </svg>
           </button>
         </div>
+
         {!selectedTheme && (
-          <p className="text-center text-text-muted text-xs pb-2">{t.selectThemeToContinue}</p>
+          <p className="text-center text-sm text-gray-600 mt-3 font-medium">
+            {t.selectThemeToContinue}
+          </p>
         )}
       </div>
     </div>

@@ -9,28 +9,25 @@ interface AIGenerationProps {
   onError: (error: string) => void;
 }
 
-const steps = [
-  { key: 'compressing', icon: '📦' },
-  { key: 'analyzing', icon: '🔍' },
-  { key: 'applying', icon: '🎨' },
-  { key: 'polishing', icon: '✨' },
-  { key: 'finishing', icon: '🖼️' },
-];
-
 export const AIGeneration: React.FC<AIGenerationProps> = ({ onComplete, onError }) => {
   const { selectedPhoto, selectedTheme, setGeneratedImage, setFinalImage } = useAppStore();
   const [progress, setProgress] = useState(0);
+  const [status, setStatus] = useState('Initializing AI...');
   const [elapsedTime, setElapsedTime] = useState(0);
   const [isProcessing, setIsProcessing] = useState(true);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
-  const [currentStep, setCurrentStep] = useState(0);
   const hasStartedRef = useRef(false);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const { t } = useLanguage();
 
   useEffect(() => {
-    timerRef.current = setInterval(() => setElapsedTime((p) => p + 1), 1000);
-    return () => { if (timerRef.current) clearInterval(timerRef.current); };
+    // Timer for elapsed time
+    timerRef.current = setInterval(() => {
+      setElapsedTime((prev) => prev + 1);
+    }, 1000);
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
   }, []);
 
   useEffect(() => {
@@ -49,151 +46,166 @@ export const AIGeneration: React.FC<AIGenerationProps> = ({ onComplete, onError 
     setErrorMsg(null);
 
     try {
-      setCurrentStep(0);
+      setStatus(t.compressingPhoto);
       setProgress(10);
-      await new Promise((r) => setTimeout(r, 600));
 
-      setCurrentStep(1);
+      await new Promise((resolve) => setTimeout(resolve, 500));
+
+      setStatus(t.analyzingPhoto);
       setProgress(20);
-      await new Promise((r) => setTimeout(r, 400));
 
-      setCurrentStep(2);
-      setProgress(35);
       const themeName = t[selectedTheme.name as keyof typeof t] || selectedTheme.name;
+      setStatus(`${t.applyingStyle} ${themeName}`);
+      setProgress(30);
 
+      // Generate AI image with Gemini
       const generatedImage = await generateImageWithGemini({
         imageBase64: selectedPhoto,
         prompt: selectedTheme.promptTemplate,
         referenceImageUrl: selectedTheme.referenceImage,
       });
 
-      setCurrentStep(3);
-      setProgress(75);
+      setProgress(70);
+      setStatus(t.addingTouches);
       setGeneratedImage(generatedImage);
-      await new Promise((r) => setTimeout(r, 500));
 
-      setCurrentStep(4);
-      setProgress(90);
+      await new Promise((resolve) => setTimeout(resolve, 500));
+
+      setProgress(85);
+      setStatus(t.applyingWatermark);
+
       const watermarkUrl = import.meta.env.VITE_WATERMARK_IMAGE_URL || '/frames/default-frame.png';
+
       try {
         const finalImage = await overlayWatermarkOnImage(generatedImage, watermarkUrl);
         setFinalImage(finalImage);
-      } catch {
+      } catch (watermarkError) {
+        console.warn('Watermark overlay failed, using image without watermark:', watermarkError);
         setFinalImage(generatedImage);
       }
 
       setProgress(100);
+      setStatus('Complete!');
       setIsProcessing(false);
       if (timerRef.current) clearInterval(timerRef.current);
-      await new Promise((r) => setTimeout(r, 600));
+
+      await new Promise((resolve) => setTimeout(resolve, 500));
       onComplete();
     } catch (error) {
       console.error('Error generating image:', error);
-      setErrorMsg(error instanceof Error ? error.message : t.failedToSave);
+      const message = error instanceof Error ? error.message : t.failedToSave;
+      setErrorMsg(message);
+      setStatus(t.generationFailed);
       setIsProcessing(false);
       if (timerRef.current) clearInterval(timerRef.current);
     }
   };
 
-  const formatTime = (s: number) => `${Math.floor(s / 60)}:${(s % 60).toString().padStart(2, '0')}`;
+  const formatTime = (seconds: number) => {
+    const m = Math.floor(seconds / 60);
+    const s = seconds % 60;
+    return `${m}:${s.toString().padStart(2, '0')}`;
+  };
 
   // Error state
   if (errorMsg) {
     return (
-      <div className="min-h-screen bg-surface flex items-center justify-center px-6">
-        <div className="card p-8 max-w-sm w-full text-center">
-          <div className="w-14 h-14 rounded-2xl bg-red-500/10 flex items-center justify-center mx-auto mb-4">
-            <svg className="w-7 h-7 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-            </svg>
+      <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-gradient-to-br from-gray-50 to-gray-100">
+        <div className="card max-w-2xl w-full shadow-2xl">
+          <div className="text-center mb-6">
+            <div className="inline-block bg-red-100 rounded-full p-4 mb-4">
+              <svg
+                className="w-16 h-16 text-red-500"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                />
+              </svg>
+            </div>
+            <h2 className="text-2xl font-bold text-red-600 mb-2">{t.generationFailed}</h2>
+            <div className="bg-gray-900 text-red-400 p-4 rounded-lg font-mono text-xs text-left max-h-40 overflow-auto">
+              {errorMsg}
+            </div>
           </div>
-          <h2 className="text-lg font-bold text-white mb-2">{t.generationFailed}</h2>
-          <div className="bg-surface-light rounded-xl p-3 mb-6">
-            <p className="text-red-400/80 text-xs font-mono break-all">{errorMsg}</p>
+
+          <div className="flex flex-col gap-3">
+            <button onClick={generateImage} className="btn-primary w-full py-4 text-lg">
+              <svg className="w-5 h-5 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
+              {t.retry}
+            </button>
+            <button onClick={() => onError(errorMsg)} className="btn-secondary w-full">
+              {t.chooseDifferentTheme}
+            </button>
           </div>
-          <button onClick={generateImage} className="btn-primary w-full mb-3">
-            {t.retry}
-          </button>
-          <button onClick={() => onError(errorMsg)} className="btn-secondary w-full text-sm">
-            {t.chooseDifferentTheme}
-          </button>
         </div>
       </div>
     );
   }
 
-  // Processing state
-  const stepLabels = [
-    t.compressingPhoto,
-    t.analyzingPhoto,
-    `${t.applyingStyle} ${t[selectedTheme?.name as keyof typeof t] || ''}`,
-    t.addingTouches,
-    t.applyingWatermark,
-  ];
-
-  // SVG circle progress
-  const radius = 60;
-  const circumference = 2 * Math.PI * radius;
-  const strokeDashoffset = circumference - (progress / 100) * circumference;
-
+  // Normal processing state
   return (
-    <div className="min-h-screen bg-surface flex flex-col items-center justify-center px-6">
-      {/* Circular progress */}
-      <div className="relative w-40 h-40 mb-8">
-        <svg className="w-full h-full -rotate-90" viewBox="0 0 140 140">
-          {/* Track */}
-          <circle cx="70" cy="70" r={radius} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="8" />
-          {/* Progress */}
-          <circle
-            cx="70" cy="70" r={radius} fill="none"
-            stroke="url(#progressGradient)"
-            strokeWidth="8"
-            strokeLinecap="round"
-            strokeDasharray={circumference}
-            strokeDashoffset={strokeDashoffset}
-            className="transition-all duration-700 ease-out"
-          />
-          <defs>
-            <linearGradient id="progressGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#6C5CE7" />
-              <stop offset="100%" stopColor="#FF6B9D" />
-            </linearGradient>
-          </defs>
-        </svg>
-        {/* Center content */}
-        <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <span className="text-3xl mb-1">{steps[currentStep]?.icon || '✨'}</span>
-          <span className="text-2xl font-bold text-white">{progress}%</span>
+    <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-gradient-to-br from-gray-50 to-gray-100">
+      <div className="card max-w-2xl w-full shadow-2xl">
+        <div className="text-center mb-8">
+          <div className="inline-block relative mb-6">
+            <div className="w-32 h-32 rounded-full border-8 border-primary-200 border-t-primary-600 animate-spin shadow-2xl"></div>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="bg-white rounded-full p-4 shadow-xl">
+                <svg
+                  className="w-12 h-12 text-primary-600 animate-pulse"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2.5}
+                    d="M13 10V3L4 14h7v7l9-11h-7z"
+                  />
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <h2 className="text-4xl font-bold mb-3 bg-gradient-to-r from-primary-600 to-pink-600 bg-clip-text text-transparent">
+            {t.creatingMagic}
+          </h2>
+          <p className="text-gray-700 text-xl mb-2 font-medium">{status}</p>
+          <p className="text-gray-400 text-sm">⏱️ {t.elapsedTime}: {formatTime(elapsedTime)}</p>
+
+          {/* Progress bar */}
+          <div className="w-full bg-gray-200 rounded-full h-6 mt-4 mb-4 overflow-hidden shadow-inner">
+            <div
+              className="h-full bg-gradient-to-r from-primary-600 via-pink-500 to-pink-600 transition-all duration-500 ease-out rounded-full shadow-lg"
+              style={{ width: `${progress}%` }}
+            ></div>
+          </div>
+          <p className="text-lg font-bold text-gray-700">{progress}% 完成</p>
         </div>
-      </div>
 
-      {/* Status text */}
-      <h2 className="text-xl font-bold text-white mb-1">{t.creatingMagic}</h2>
-      <p className="text-text-secondary text-sm mb-6">{stepLabels[currentStep]}</p>
-
-      {/* Steps indicator */}
-      <div className="flex gap-2 mb-8">
-        {steps.map((step, i) => (
-          <div
-            key={i}
-            className={`w-2 h-2 rounded-full transition-all duration-500 ${
-              i < currentStep ? 'bg-primary-500' :
-              i === currentStep ? 'bg-primary-400 scale-125' :
-              'bg-white/10'
-            }`}
-          />
-        ))}
-      </div>
-
-      {/* Info card */}
-      <div className="card px-5 py-4 max-w-xs w-full">
-        <div className="flex items-center gap-3 text-text-secondary text-sm">
-          <span className="text-text-muted">⏱</span>
-          <span>{t.elapsedTime}：{formatTime(elapsedTime)}</span>
+        {/* Tips */}
+        <div className="bg-gradient-to-r from-primary-50 to-pink-50 rounded-2xl p-6 border-2 border-primary-200 shadow-lg">
+          <h3 className="font-bold text-gray-800 mb-3 flex items-center text-lg">
+            <div className="bg-gradient-to-r from-primary-600 to-pink-600 rounded-full p-2 mr-3">
+              <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+              </svg>
+            </div>
+            {t.pleaseWait}
+          </h3>
+          <p className="text-gray-700 text-base leading-relaxed">
+            {t.aiGenerationTime}
+          </p>
         </div>
-        <p className="text-text-muted text-xs mt-3 leading-relaxed">
-          {t.aiGenerationTime}
-        </p>
       </div>
     </div>
   );
