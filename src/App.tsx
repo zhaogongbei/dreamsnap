@@ -10,9 +10,11 @@ import { WeChatGuide } from '@/components/WeChatGuide';
 // Components
 import { PhotoCapture } from '@/components/PhotoCapture';
 import { PhotoSelection } from '@/components/PhotoSelection';
-import { ThemeSelection } from '@/components/ThemeSelection';
-import { AIGeneration } from '@/components/AIGeneration';
-import { ImagePreview } from '@/components/ImagePreview';
+
+// Cyberpunk styled Components
+import { ThemeSelection as CyberThemeSelection } from '@/components/cyberpunk/ThemeSelection';
+import { AIGeneration as CyberAIGeneration } from '@/components/cyberpunk/AIGeneration';
+import { ImagePreview as CyberImagePreview } from '@/components/cyberpunk/ImagePreview';
 
 // Pages
 import { GalleryPage } from '@/pages/GalleryPage';
@@ -147,21 +149,21 @@ function MainFlow() {
       )}
 
       {currentStep === 'theme' && (
-        <ThemeSelection
+        <CyberThemeSelection
           onNext={() => setCurrentStep('generate')}
           onBack={() => setCurrentStep('select')}
         />
       )}
 
       {currentStep === 'generate' && (
-        <AIGeneration
+        <CyberAIGeneration
           onComplete={() => setCurrentStep('preview')}
           onError={handleGenerationError}
         />
       )}
 
       {currentStep === 'preview' && (
-        <ImagePreview
+        <CyberImagePreview
           onApprove={handleImageApprove}
           onRetry={() => setCurrentStep('theme')}
         />
